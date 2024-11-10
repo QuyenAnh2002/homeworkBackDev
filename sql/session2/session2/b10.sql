@@ -1,0 +1,32 @@
+ALTER TABLE Users
+ADD CONSTRAINT UQ_UserName UNIQUE (UserName);
+
+ALTER TABLE Users
+ADD CONSTRAINT UQ_Email UNIQUE (Email);
+
+ALTER TABLE Products
+ALTER COLUMN ProductName NVARCHAR(255) NOT NULL;
+
+ALTER TABLE Products
+ALTER COLUMN Price DECIMAL(10, 2) NOT NULL;
+
+ALTER TABLE Products
+ALTER COLUMN Stock INT NOT NULL;
+ALTER TABLE Orders
+ADD CONSTRAINT CK_TotalAmount_Positive CHECK (TotalAmount >= 0);
+ALTER TABLE OrderDetails
+ADD CONSTRAINT CK_Quantity_Positive CHECK (Quantity >= 0);
+
+ALTER TABLE OrderDetails
+ADD CONSTRAINT CK_UnitPrice_Positive CHECK (UnitPrice >= 0);
+ALTER TABLE ProductReviews
+ADD CONSTRAINT CK_Rating_Range CHECK (Rating BETWEEN 1 AND 5);
+SELECT 
+    TABLE_NAME,
+    CONSTRAINT_NAME,
+    CONSTRAINT_TYPE
+FROM 
+    INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+WHERE 
+    TABLE_SCHEMA = 'dbo' 
+    AND TABLE_NAME IN ('Users', 'Products', 'Orders', 'OrderDetails', 'ProductReviews');

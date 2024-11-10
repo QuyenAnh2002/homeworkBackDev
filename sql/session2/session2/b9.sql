@@ -1,0 +1,55 @@
+CREATE DATABASE ECommerceDB;
+
+
+USE ECommerceDB;
+
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY IDENTITY,
+    UserName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    RegistrationDate DATE DEFAULT GETDATE()
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY IDENTITY,
+    ProductName NVARCHAR(255) NOT NULL,
+    Category NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(MAX),
+    Price DECIMAL(10, 2) NOT NULL,
+    Stock INT DEFAULT 0
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY IDENTITY,
+    UserID INT NOT NULL,
+    OrderDate DATE DEFAULT GETDATE(),
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY IDENTITY,
+    OrderID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+
+CREATE TABLE ProductReviews (
+    ReviewID INT PRIMARY KEY IDENTITY,
+    UserID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    ReviewText NVARCHAR(MAX),
+    ReviewDate DATE DEFAULT GETDATE(),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+
+SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo';
